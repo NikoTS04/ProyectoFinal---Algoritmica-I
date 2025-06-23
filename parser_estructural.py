@@ -1,4 +1,3 @@
-# parser.py
 class Nodo:
     def __init__(self, tipo, props=None, hijos=None):
         self.tipo = tipo
@@ -299,5 +298,4 @@ resultadoFinal <- calc.operacionCompuesta(num1, num2)
     print(arbol)
 
 #for t in tokens:
-#
-#hola
+#    print(t)
