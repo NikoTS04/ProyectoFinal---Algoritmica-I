@@ -21,6 +21,19 @@ class Nodo:
             out += hijo.__repr__(nivel + 1)
         return out
 
+def calcular_tamano(indices):
+    tam = 1
+    for idx in indices:
+        # Si el índice es vacío (corchetes vacíos), omitirlo
+        if len(idx) == 0:
+            return None
+        if len(idx) == 1 and idx[0].isdigit():
+            tam *= int(idx[0])
+        else:
+            return None  # No es un tamaño fijo (puede ser variable)
+    return tam
+
+
 def parsear(tokens, debug=False):
     i = 0
     stack = []
@@ -86,6 +99,70 @@ def parsear(tokens, debug=False):
             if debug:
                 print(f"ASIGNACION '{var} <- {' '.join(expr)}'")
                 show_stack()
+                
+        # ACCESO, DECLARACION O ASIGNACION DE ARREGLO (SOPORTA MULTIDIMENSIONALES)
+        elif t['tipo'] == 'IDENT' and i+1 < len(tokens) and tokens[i+1]['tipo'] == 'CORCHETE_IZQ':
+            nombre = t['valor']
+            indices = []
+            i += 1
+            while i < len(tokens) and tokens[i]['tipo'] == 'CORCHETE_IZQ':
+                i += 1
+                index_expr = []
+                while i < len(tokens) and tokens[i]['tipo'] != 'CORCHETE_DER':
+                    index_expr.append(tokens[i]['valor'])
+                    i += 1
+                indices.append(index_expr)
+                if i < len(tokens) and tokens[i]['tipo'] == 'CORCHETE_DER':
+                    i += 1
+            # Si es asignación
+            if i < len(tokens) and tokens[i]['tipo'] == 'ASIGNACION':
+                i += 1
+                # Inicialización con llaves
+                if i < len(tokens) and tokens[i]['tipo'] == 'LLAVE_IZQ':
+                    i += 1
+                    elementos = []
+                    while i < len(tokens) and tokens[i]['tipo'] != 'LLAVE_DER':
+                        if tokens[i]['tipo'] == 'NUMERO':
+                            elementos.append(tokens[i]['valor'])
+                        i += 1
+                    if i < len(tokens) and tokens[i]['tipo'] == 'LLAVE_DER':
+                        i += 1
+                    tamano_declarado = calcular_tamano(indices)
+                    tamano_elementos = len(elementos)
+                    coincide_tamano = None
+                    if tamano_declarado is not None:
+                        coincide_tamano = (tamano_declarado == tamano_elementos)
+                    nodo = Nodo("ASIGNACION_ARREGLO", {
+                        'nombre': nombre,
+                        'indices': indices,
+                        'elementos': elementos,
+                        'tamano': tamano_elementos,
+                        'coincide_tamano': coincide_tamano
+                    })
+                    actual.add_hijo(nodo)
+                else:
+                    # Asignación tradicional
+                    expr = []
+                    while i < len(tokens) and tokens[i]['tipo'] not in ('NUEVA_LINEA', 'PALABRA_CLAVE', 'PAREN_DER'):
+                        expr.append(tokens[i]['valor'])
+                        i += 1
+                    nodo = Nodo("ASIGNACION_ARREGLO", {
+                        'nombre': nombre,
+                        'indices': indices,
+                        'expr': expr,
+                        'tamano': calcular_tamano(indices)
+                    })
+                    actual.add_hijo(nodo)
+            else:
+                # Declaración sin asignación
+                tamano = calcular_tamano(indices)
+                nodo = Nodo("DECLARACION_ARREGLO", {
+                    'nombre': nombre,
+                    'indices': indices,
+                    'tamano': tamano
+                })
+                actual.add_hijo(nodo)
+
 
         # SI
         elif t['tipo'] == 'PALABRA_CLAVE' and t['valor'].lower() == 'si':
@@ -253,45 +330,43 @@ if __name__ == "__main__":
     from pseudogrammar import tokenizar
 
     pseudocodigo = '''
-Clase Calculadora
-    Funcion suma(a, b)
-        resultado <- a + b
-        retornar resultado
-    fFuncion
-
-    Funcion multiplicar(a, b)
-        resultado <- 0
-        Para i desde 1 hasta b hacer
-            resultado <- resultado + a
+Clase Prueba
+    Funcion inicializar()
+        arreglo1[5]
+        arreglo2[] <- {1, 2, 3, 4, 5}
+        matriz[3][4] <- 0
+        datos[8] <- {2, 4, 6, 8, 10, 12, 14, 16}
+        x <- 7
+        y <- arreglo2[2]
+        matriz[1][2] <- x + y
+        Para i desde 1 hasta 5 hacer
+            suma <- suma + arreglo2[i]
         fPara
+        Mientras (x < 10) hacer
+            x <- x + 1
+        fMientras
+        Si (x > y) Entonces
+            resultado <- x - y
+        Sino
+            resultado <- y - x
+        fSi
         retornar resultado
     fFuncion
 
-    Funcion operacionCompuesta(x, y)
-        Si (x > 10) Entonces
-            Si (y < 5) Entonces
-                retornar suma(x, y)
-            Sino
-                retornar multiplicar(x, y)
-            fSi
+    Funcion operar(a, b)
+        temp <- self.inicializar()
+        Si (a > b) Entonces
+            res <- temp + a
         Sino
-            resultado <- suma(x, y)
-            Mientras (resultado < 100) hacer
-                resultado <- resultado + x
-            fMientras
-            retornar resultado
+            res <- temp + b
         fSi
+        retornar res
     fFuncion
 fClase
 
-num1 <- 7
-num2 <- 4
-calc <- Calculadora()
-
-sumaTotal <- calc.suma(num1, num2)
-multiTotal <- calc.multiplicar(num1, num2)
-resultadoFinal <- calc.operacionCompuesta(num1, num2)
-
+obj <- Prueba()
+resultado <- obj.operar(10, 5)
+arregloGlobal[3] <- 99
 '''
     tokens = tokenizar(pseudocodigo)
     arbol = parsear(tokens, False)
