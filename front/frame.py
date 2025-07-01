@@ -22,7 +22,7 @@ frame_comparacion = tb.Frame(notebook)
 def cambiar_a_grafica():
     notebook.select(frame_grafica)  
 
-crear_pestana_entrada(frame_entrada)
+crear_pestana_entrada(frame_entrada, cambiar_a_grafica)
 crear_pestana_grafica(frame_grafica)
 crear_pestana_comparacion(frame_comparacion)
 
@@ -30,9 +30,6 @@ crear_pestana_comparacion(frame_comparacion)
 notebook.add(frame_entrada, text="Entrada")
 notebook.add(frame_grafica, text="Gráfica")
 notebook.add(frame_comparacion, text="Comparación")
-
-def cambiar_a_grafica():
-    notebook.select(1)
 
 # Ejecutar la aplicación
 ventana.mainloop()

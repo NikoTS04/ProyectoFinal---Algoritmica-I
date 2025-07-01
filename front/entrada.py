@@ -1,5 +1,13 @@
 import tkinter.filedialog
 import ttkbootstrap as tb
+import sys
+import os
+
+# Añadir el directorio padre al path para importar los módulos
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from pseudogrammar import tokenizar
+from parser_estructural import parsear
 
 def crear_pestana_entrada(frame, cambiar_a_grafica_callback=None):
     # --- FUNCIONES ---
@@ -13,6 +21,31 @@ def crear_pestana_entrada(frame, cambiar_a_grafica_callback=None):
                 contenido = f.read()
                 texto_codigo.delete(1.0, "end")
                 texto_codigo.insert("end", contenido)
+
+    def analizar_codigo():
+        codigo = texto_codigo.get(1.0, "end-1c")
+        if not codigo.strip():
+            texto_resultado.delete(1.0, "end")
+            texto_resultado.insert("end", "⚠️ No hay código para analizar")
+            return
+        
+        try:
+            # Tokenizar el código
+            tokens = tokenizar(codigo)
+            
+            # Parsear y crear el AST
+            arbol = parsear(tokens, False)
+            
+            # Mostrar resultado
+            texto_resultado.delete(1.0, "end")
+            texto_resultado.insert("end", "✅ ANÁLISIS EXITOSO\n\n")
+            texto_resultado.insert("end", "🌳 ÁRBOL DE SINTAXIS ABSTRACTA:\n")
+            texto_resultado.insert("end", "=" * 50 + "\n")
+            texto_resultado.insert("end", str(arbol))
+            
+        except Exception as e:
+            texto_resultado.delete(1.0, "end")
+            texto_resultado.insert("end", f"❌ ERROR EN EL ANÁLISIS:\n{str(e)}")
 
     def limpiar_texto():
         texto_codigo.delete(1.0, "end")
@@ -46,7 +79,7 @@ def crear_pestana_entrada(frame, cambiar_a_grafica_callback=None):
     boton_cargar = tb.Button(frame_botones, text="Cargar archivo", command=cargar_archivo, bootstyle="success")
     boton_cargar.pack(side="left", padx=10)
 
-    boton_analizar = tb.Button(frame_botones, text="Analizar", command=lambda: print("Análisis pendiente..."), bootstyle="info")
+    boton_analizar = tb.Button(frame_botones, text="Analizar", command=analizar_codigo, bootstyle="info")
     boton_analizar.pack(side="left", padx=10)
 
     # --- RESULTADO DEL ANÁLISIS ---

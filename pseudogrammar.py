@@ -35,7 +35,7 @@ for op in operadores_ordenados:
 
 token_specification += [
     ('NUMERO',       r'\d+(\.\d+)?'),
-    ('IDENT',        r'[A-Za-z_][A-Za-z0-9_]*'),
+    ('IDENT',        r'[A-Za-zñÑáéíóúÁÉÍÓÚü_][A-Za-z0-9ñÑáéíóúÁÉÍÓÚü_]*'),
     ('PAREN_IZQ',    r'\('),
     ('PAREN_DER',    r'\)'),
     ('COMA',         r','),
