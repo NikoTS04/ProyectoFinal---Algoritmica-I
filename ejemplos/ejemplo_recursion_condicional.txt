@@ -1,0 +1,11 @@
+Funcion busquedaCondicional(N)
+    Si N <= 1 Entonces
+        retornar N
+    Sino
+        Si N % 2 = 0 Entonces
+            retornar busquedaCondicional(N/2)
+        Sino
+            retornar busquedaCondicional(N-1)
+        fSi
+    fSi
+fFuncion

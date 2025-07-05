@@ -77,8 +77,11 @@ class ExpresionSimbolica:
                 expr_simplificada.has(sympy.exp(n))):
                 return f"O(2^n)"
             
-            # Casos especiales para logarítmicos
-            if expr_simplificada.has(sympy.log(n)):
+            # Casos especiales para logarítmicos - detección mejorada
+            if (expr_simplificada.has(sympy.log(n)) or 
+                'log(N)' in expr_str or 
+                'log(n)' in expr_str or
+                '/log(' in expr_str):
                 return f"O(log(n))"
             
             # Expandir para obtener términos individuales
@@ -88,16 +91,32 @@ class ExpresionSimbolica:
             if not expr_expanded.has(n):
                 return "O(1)"
             
+            # Verificación adicional para logaritmos en expresiones expandidas
+            expr_expanded_str = str(expr_expanded)
+            if ('log(' in expr_expanded_str and 
+                (var in expr_expanded_str or var.lower() in expr_expanded_str)):
+                return f"O(log(n))"
+            
             # Si es una suma, encontrar el término dominante
             if expr_expanded.is_Add:
                 terms = expr_expanded.args
                 max_degree = 0
                 dominant_term = sympy.Integer(1)
                 
+                # Verificar si algún término contiene logaritmo
+                for term in terms:
+                    term_str = str(term)
+                    if 'log(' in term_str and (var in term_str or var.lower() in term_str):
+                        return f"O(log(n))"
+                
                 for term in terms:
                     if term.has(n):
                         # Obtener el grado del término respecto a n
                         degree = sympy.degree(term, n)
+                        if degree > max_degree:
+                            max_degree = degree
+                            # Extraer solo la parte que depende de n
+                            dominant_term = term
                         if degree > max_degree:
                             max_degree = degree
                             # Extraer solo la parte que depende de n

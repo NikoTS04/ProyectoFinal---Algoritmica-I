@@ -132,6 +132,13 @@ dmypy.json
 test_*.py
 temp_*.py
 prueba_*.py
+debug_*.py
+verificar_*.py
+ejemplo_*.txt
+!ejemplos/ejemplo_*.txt
+
+# Análisis temporales con timestamp
+analisis_guardados/analisis_20*.json
 
 # Archivos del sistema
 .DS_Store
@@ -146,3 +153,7 @@ Thumbs.db
 .idea/
 *.sublime-project
 *.sublime-workspace
+
+# Archivos de configuración local
+config.py
+local_config.py

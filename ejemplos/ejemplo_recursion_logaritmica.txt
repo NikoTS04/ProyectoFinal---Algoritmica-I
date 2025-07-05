@@ -1,0 +1,7 @@
+Funcion buscarRecursivo(N)
+    Si N <= 1 Entonces
+        retornar N
+    Sino
+        retornar buscarRecursivo(N/2)
+    fSi
+fFuncion
