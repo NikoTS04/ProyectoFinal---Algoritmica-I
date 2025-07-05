@@ -37,13 +37,11 @@ class AnalizadorApp:
         self.ventana.geometry("950x750")
         self.ventana.minsize(850, 650)
         
-        # Configurar ícono (opcional)
-        try:
-            # Si tienes un ícono, descomenta esta línea
-            # self.ventana.iconbitmap("assets/icon.ico")
-            pass
-        except:
-            pass
+        # Configurar ícono personalizado
+        self._configurar_icono()
+        
+        # Configurar ventana para Windows (barra de tareas)
+        self._configurar_ventana_windows()
         
         # Crear el Notebook (pestañas)
         self.notebook = tb.Notebook(self.ventana, bootstyle="primary")
@@ -88,6 +86,88 @@ class AnalizadorApp:
         
         # Configurar eventos de cierre
         self.ventana.protocol("WM_DELETE_WINDOW", self._on_closing)
+    
+    def _configurar_icono(self):
+        """Configura el icono personalizado de la aplicación"""
+        try:
+            # Ruta al icono desde la ubicación del archivo app.py
+            icon_path = Path(__file__).parent.parent / "resources" / "gatoCoder.ico"
+            
+            if icon_path.exists():
+                # Método 1: iconbitmap (ventana principal)
+                self.ventana.iconbitmap(str(icon_path))
+                
+                # Método 2: wm_iconbitmap (compatibilidad adicional)
+                self.ventana.wm_iconbitmap(str(icon_path))
+                
+                # Método 3: iconphoto para mayor compatibilidad con sistemas modernos
+                try:
+                    from PIL import Image, ImageTk
+                    # Cargar el icono
+                    image = Image.open(icon_path)
+                    # Convertir a RGBA si es necesario
+                    if image.mode != 'RGBA':
+                        image = image.convert('RGBA')
+                    # Crear PhotoImage
+                    photo = ImageTk.PhotoImage(image)
+                    # Aplicar a todas las ventanas (True = aplicar globalmente)
+                    self.ventana.iconphoto(True, photo)
+                    # Mantener una referencia para evitar que sea recolectado por garbage collector
+                    self.ventana._icon_photo = photo
+                    
+                except ImportError:
+                    print("⚠️ PIL no disponible, usando solo iconbitmap")
+                except Exception as e:
+                    print(f"⚠️ Error con iconphoto: {e}")
+                
+                print(f"✅ Icono personalizado cargado: {icon_path.name}")
+                print("🖼️ Icono aplicado a ventana y barra de tareas")
+                
+            else:
+                print(f"⚠️ Archivo de icono no encontrado: {icon_path}")
+                print(f"📁 Buscado en: {icon_path}")
+                
+                # Buscar en ubicaciones alternativas
+                alt_paths = [
+                    Path(__file__).parent.parent.parent / "resources" / "gatoCoder.ico",
+                    Path(__file__).parent / "resources" / "gatoCoder.ico", 
+                    Path("resources") / "gatoCoder.ico",
+                    Path("gatoCoder.ico")
+                ]
+                
+                for alt_path in alt_paths:
+                    if alt_path.exists():
+                        print(f"✅ Icono encontrado en ubicación alternativa: {alt_path}")
+                        self.ventana.iconbitmap(str(alt_path))
+                        self.ventana.wm_iconbitmap(str(alt_path))
+                        break
+                else:
+                    print("❌ No se encontró el icono en ninguna ubicación")
+                    
+        except Exception as e:
+            print(f"⚠️ No se pudo cargar el icono personalizado: {e}")
+            print("💡 La aplicación usará el icono por defecto")
+    
+    def _configurar_ventana_windows(self):
+        """Configuraciones específicas para Windows (barra de tareas)"""
+        try:
+            # Configurar ID único de aplicación para Windows
+            import ctypes
+            app_id = 'UCSUR.AnalizadorComplejidad.GUI.2.0'  # ID único para tu app
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(app_id)
+            
+            # Configurar atributos adicionales de la ventana
+            self.ventana.attributes('-toolwindow', False)  # Asegurar que aparezca en barra de tareas
+            
+            # Forzar que la ventana sea reconocida como aplicación independiente
+            self.ventana.wm_attributes('-topmost', False)
+            
+            print("✅ Configuraciones de Windows aplicadas (barra de tareas)")
+            
+        except Exception as e:
+            print(f"⚠️ No se pudieron aplicar configuraciones de Windows: {e}")
+            # No es crítico, continuar sin estas optimizaciones
+            pass
     
     def _configurar_pestanas(self):
         """Configura el contenido de cada pestaña"""
