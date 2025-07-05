@@ -1,0 +1,15 @@
+{
+  "codigo": "Funcion busquedaLineal(N)\n    x <- 0\n    Para i desde 1 hasta N hacer\n        Si a[i] = x Entonces\n            retornar i\n        fSi\n    fPara\n    retornar -1\nfFuncion\n",
+  "nombre_funcion": "busquedaLineal",
+  "funcion_tiempo": {
+    "expr_string": "5*N + 3",
+    "expr_latex": null,
+    "variables": [
+      "N"
+    ]
+  },
+  "big_o": "O(n)",
+  "recursivo": false,
+  "fecha_creacion": "2025-07-04T19:59:34.575365",
+  "version": "2.0"
+}

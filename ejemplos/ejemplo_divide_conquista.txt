@@ -1,0 +1,13 @@
+Funcion busquedaDividir(N)
+    inicio <- 1
+    fin <- N
+    Mientras inicio < fin hacer
+        medio <- (inicio + fin) / 2
+        Si condicion(medio) Entonces
+            fin <- medio
+        Sino
+            inicio <- medio + 1
+        fSi
+    fMientras
+    retornar inicio
+fFuncion

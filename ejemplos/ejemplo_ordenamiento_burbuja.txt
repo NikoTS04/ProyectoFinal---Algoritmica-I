@@ -1,0 +1,12 @@
+Funcion ordenamientoBurbuja(N)
+    Para i desde 1 hasta N hacer
+        Para j desde 1 hasta N-1 hacer
+            Si arreglo[j] > arreglo[j+1] Entonces
+                temp <- arreglo[j]
+                arreglo[j] <- arreglo[j+1]
+                arreglo[j+1] <- temp
+            fSi
+        fPara
+    fPara
+    retornar arreglo
+fFuncion

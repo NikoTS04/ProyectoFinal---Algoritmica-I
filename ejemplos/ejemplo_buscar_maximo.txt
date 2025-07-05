@@ -1,0 +1,9 @@
+Funcion buscarMaximo(N)
+    maximo <- arreglo[1]
+    Para i desde 2 hasta N hacer
+        Si arreglo[i] > maximo Entonces
+            maximo <- arreglo[i]
+        fSi
+    fPara
+    retornar maximo
+fFuncion

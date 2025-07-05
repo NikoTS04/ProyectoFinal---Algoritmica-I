@@ -1,0 +1,7 @@
+Funcion sumaElementos(N)
+    suma <- 0
+    Para i desde 1 hasta N hacer
+        suma <- suma + arreglo[i]
+    fPara
+    retornar suma
+fFuncion

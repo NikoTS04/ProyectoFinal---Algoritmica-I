@@ -1,0 +1,7 @@
+Funcion factorialIterativo(N)
+    resultado <- 1
+    Para i desde 1 hasta N hacer
+        resultado <- resultado * i
+    fPara
+    retornar resultado
+fFuncion

@@ -1,0 +1,15 @@
+{
+  "codigo": "Funcion busquedaBinaria(N)\n    inicio <- 1\n    fin <- N\n    Mientras inicio <= fin hacer\n        medio <- (inicio + fin) / 2\n        Si a[medio] = x Entonces\n            retornar medio\n        Sino\n            Si x < a[medio] Entonces\n                fin <- medio - 1\n            Sino\n                inicio <- medio + 1\n            fSi\n        fSi\n    fMientras\n    retornar -1\nfFuncion\n",
+  "nombre_funcion": "busquedaBinaria",
+  "funcion_tiempo": {
+    "expr_string": "21*N + 2",
+    "expr_latex": null,
+    "variables": [
+      "N"
+    ]
+  },
+  "big_o": "O(n)",
+  "recursivo": false,
+  "fecha_creacion": "2025-07-04T19:59:06.572304",
+  "version": "2.0"
+}

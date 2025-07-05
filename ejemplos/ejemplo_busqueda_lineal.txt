@@ -1,0 +1,9 @@
+Funcion busquedaLineal(N)
+    x <- 0
+    Para i desde 1 hasta N hacer
+        Si a[i] = x Entonces
+            retornar i
+        fSi
+    fPara
+    retornar -1
+fFuncion

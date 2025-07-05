@@ -1,0 +1,17 @@
+Funcion busquedaBinaria(N)
+    inicio <- 1
+    fin <- N
+    Mientras inicio <= fin hacer
+        medio <- (inicio + fin) / 2
+        Si a[medio] = x Entonces
+            retornar medio
+        Sino
+            Si x < a[medio] Entonces
+                fin <- medio - 1
+            Sino
+                inicio <- medio + 1
+            fSi
+        fSi
+    fMientras
+    retornar -1
+fFuncion

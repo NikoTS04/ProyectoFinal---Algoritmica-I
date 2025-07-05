@@ -1,0 +1,10 @@
+Funcion sumaMatrices(N)
+    Para i desde 1 hasta N hacer
+        Para j desde 1 hasta N hacer
+            Para k desde 1 hasta N hacer
+                resultado[i][j] <- resultado[i][j] + matriz1[i][k] * matriz2[k][j]
+            fPara
+        fPara
+    fPara
+    retornar resultado
+fFuncion

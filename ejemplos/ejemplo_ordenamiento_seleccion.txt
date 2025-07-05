@@ -1,0 +1,16 @@
+Funcion ordenamientoSeleccion(N)
+    Para i desde 1 hasta N-1 hacer
+        minimo <- i
+        Para j desde i+1 hasta N hacer
+            Si arreglo[j] < arreglo[minimo] Entonces
+                minimo <- j
+            fSi
+        fPara
+        Si minimo != i Entonces
+            temp <- arreglo[i]
+            arreglo[i] <- arreglo[minimo]
+            arreglo[minimo] <- temp
+        fSi
+    fPara
+    retornar arreglo
+fFuncion

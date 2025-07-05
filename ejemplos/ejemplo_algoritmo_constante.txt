@@ -1,0 +1,11 @@
+Funcion algoritmoConstante(N)
+    x <- 5
+    y <- x + 10
+    z <- y * 3
+    Si x > 0 Entonces
+        resultado <- z / 2
+    Sino
+        resultado <- z + 1
+    fSi
+    retornar resultado
+fFuncion

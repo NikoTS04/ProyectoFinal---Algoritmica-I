@@ -1,0 +1,17 @@
+Funcion busquedaSecuencial(N)
+    encontrado <- falso
+    i <- 1
+    Mientras i <= N y no encontrado hacer
+        Si arreglo[i] = objetivo Entonces
+            encontrado <- verdadero
+            posicion <- i
+        Sino
+            i <- i + 1
+        fSi
+    fMientras
+    Si encontrado Entonces
+        retornar posicion
+    Sino
+        retornar -1
+    fSi
+fFuncion

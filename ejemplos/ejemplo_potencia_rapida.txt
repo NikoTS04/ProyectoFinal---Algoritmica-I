@@ -1,0 +1,12 @@
+Funcion potenciaRecursiva(N)
+    Si N = 0 Entonces
+        retornar 1
+    Sino
+        Si N % 2 = 0 Entonces
+            temp <- potenciaRecursiva(N/2)
+            retornar temp * temp
+        Sino
+            retornar base * potenciaRecursiva(N-1)
+        fSi
+    fSi
+fFuncion

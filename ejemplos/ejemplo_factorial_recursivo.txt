@@ -1,0 +1,7 @@
+Funcion factorialRecursivo(N)
+    Si N <= 1 Entonces
+        retornar 1
+    Sino
+        retornar N * factorialRecursivo(N-1)
+    fSi
+fFuncion

@@ -1,0 +1,7 @@
+Funcion fibonacci(N)
+    Si N <= 1 Entonces
+        retornar N
+    Sino
+        retornar fibonacci(N-1) + fibonacci(N-2)
+    fSi
+fFuncion
