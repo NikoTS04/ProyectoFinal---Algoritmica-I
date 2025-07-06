@@ -1,0 +1,16 @@
+{
+  "codigo": "Funcion counting_sort_simple(N)\n    // Fase 1: Inicializar array de conteo\n    Para i desde 1 hasta N hacer\n        count[i] <- 0\n    fPara\n    \n    // Fase 2: Contar ocurrencias\n    Para i desde 1 hasta N hacer\n        count[arr[i]] <- count[arr[i]] + 1\n    fPara\n    \n    // Fase 3: Reconstruir array ordenado\n    Para i desde 1 hasta N hacer\n        Para j desde 1 hasta count[i] hacer\n            resultado[pos] <- i\n            pos <- pos + 1\n        fPara\n    fPara\nfFuncion\n",
+  "nombre_funcion": "counting_sort_simple",
+  "funcion_tiempo": {
+    "expr_string": "N*(6*count + 2) + 5*N + 6",
+    "expr_latex": null,
+    "variables": [
+      "count",
+      "N"
+    ]
+  },
+  "big_o": "O(n)",
+  "recursivo": false,
+  "fecha_creacion": "2025-07-06T12:04:38.574897",
+  "version": "2.0"
+}

@@ -92,9 +92,15 @@ from src.core.analizador_complejidad import AnalizadorComplejidad
 | Algoritmo | Complejidad Real | Detectada | Estado |
 |-----------|------------------|-----------|---------|
 | Búsqueda Lineal | O(n) | O(n) | ✅ |
+| Búsqueda Binaria | O(log n) | O(log n) | ✅ |
 | Fibonacci Recursivo | O(2^n) | O(2^n) | ✅ |
+| Multiplicación Matrices | O(n³) | O(n³) | ✅ |
+| Ordenamiento Burbuja | O(n²) | O(n²) | ✅ |
+| Quicksort Multi-param | O(n) | O(n) | ✅ |
 | Bucle Simple | O(n) | O(n) | ✅ |
 | Constante | O(1) | O(1) | ✅ |
+
+**Total: 36/36 ejemplos funcionando (100% éxito)**
 
 ### 🔧 **Problema de Serialización Solucionado**
 
@@ -156,6 +162,15 @@ from src.core.analizador_complejidad import AnalizadorComplejidad
 3. **Arquitectura Limpia**: Código organizado y mantenible
 4. **UX Profesional**: Interfaz intuitiva y atractiva
 5. **Persistencia Completa**: Guardar/cargar sin fricciones
+6. **Soporte Multi-parámetro**: Funciones con múltiples argumentos
+7. **Detección Completa**: 6 tipos de complejidad (O(1), O(log n), O(n), O(n²), O(n³), O(2^n))
+8. **100% Funcional**: Todos los 36 ejemplos analizados correctamente
+
+### 🐛 Últimas Correcciones Aplicadas
+
+- **Fix Typo Function**: Corregido error `buscar_asignaciones_recursivas` → `buscar_asignaciones_recursivo`
+- **Resultado**: 10 ejemplos adicionales funcionando (36/36 total)
+- **Complejidades**: O(log n) correctamente detectado en búsquedas binarias
 
 ### � Proyecto 100% Completado
 

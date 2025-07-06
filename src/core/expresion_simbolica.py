@@ -63,41 +63,74 @@ class ExpresionSimbolica:
         return str(self.expr)
 
     def big_o(self, var='N'):
-        n = sympy.Symbol(var)
         try:
             # Simplificar la expresión primero
             expr_simplificada = sympy.simplify(self.expr)
             
+            # Obtener todas las variables en la expresión
+            variables = list(expr_simplificada.free_symbols)
+            
+            # Si no hay variables, es constante
+            if not variables:
+                return "O(1)"
+            
             # Casos especiales para expresiones exponenciales
             expr_str = str(expr_simplificada)
-            if (expr_simplificada.has(2**n) or 
-                '2**N' in expr_str or 
-                '2**n' in expr_str or
-                '2**(' in expr_str or  # Para casos como 2**(N+1)
-                expr_simplificada.has(sympy.exp(n))):
-                return f"O(2^n)"
+            for v in variables:
+                v_str = str(v)
+                if (expr_simplificada.has(2**v) or 
+                    f'2**{v_str}' in expr_str or 
+                    '2**(' in expr_str):
+                    return f"O(2^n)"
             
-            # Casos especiales para logarítmicos - detección mejorada
-            if (expr_simplificada.has(sympy.log(n)) or 
-                'log(N)' in expr_str or 
-                'log(n)' in expr_str or
-                '/log(' in expr_str):
-                return f"O(log(n))"
+            # Casos especiales para logarítmicos
+            for v in variables:
+                v_str = str(v)
+                if (expr_simplificada.has(sympy.log(v)) or 
+                    f'log({v_str})' in expr_str or
+                    '/log(' in expr_str):
+                    return f"O(log(n))"
             
             # Expandir para obtener términos individuales
             expr_expanded = sympy.expand(expr_simplificada)
             
-            # Si es una constante, retornar O(1)
-            if not expr_expanded.has(n):
+            # Encontrar el término dominante considerando todas las variables
+            max_degree = 0
+            degree_info = {}
+            
+            # Analizar el grado total de la expresión
+            for var_sym in variables:
+                degree = sympy.degree(expr_expanded, var_sym)
+                degree_info[str(var_sym)] = degree
+                max_degree = max(max_degree, degree)
+            
+            # Determinar la complejidad basada en el análisis
+            if max_degree == 0:
                 return "O(1)"
-            
-            # Verificación adicional para logaritmos en expresiones expandidas
-            expr_expanded_str = str(expr_expanded)
-            if ('log(' in expr_expanded_str and 
-                (var in expr_expanded_str or var.lower() in expr_expanded_str)):
-                return f"O(log(n))"
-            
-            # Si es una suma, encontrar el término dominante
+            elif max_degree == 1:
+                # Verificar si es producto de variables (ej: a*b)
+                if len(variables) > 1 and expr_expanded.is_Mul:
+                    # Contar cuántas variables aparecen en el término principal
+                    var_count = sum(1 for v in variables if expr_expanded.has(v))
+                    if var_count > 1:
+                        return f"O(n*m)"  # Producto de variables
+                return "O(n)"
+            elif max_degree == 2:
+                return "O(n²)"
+            elif max_degree == 3:
+                return "O(n³)"
+            else:
+                return f"O(n^{max_degree})"
+                
+        except Exception as e:
+            # Fallback simple
+            expr_str = str(self.expr)
+            if any(op in expr_str for op in ['**2', '^2', '*N*', '*n*']):
+                return "O(n²)"
+            elif any(var in expr_str for var in ['N', 'n', 'a', 'b', 'c']):
+                return "O(n)"
+            else:
+                return "O(1)"
             if expr_expanded.is_Add:
                 terms = expr_expanded.args
                 max_degree = 0
@@ -152,15 +185,14 @@ class ExpresionSimbolica:
                 return f"O({result})".replace(var, 'n')
                 
         except Exception as e:
-            # Fallback: buscar la mayor potencia de n
-            try:
-                degree = sympy.degree(self.expr, n)
-                if degree > 0:
-                    return f"O(n**{degree})".replace('**1', '')
-                else:
-                    return "O(1)"
-            except:
+            # Fallback simple
+            expr_str = str(self.expr)
+            if any(op in expr_str for op in ['**2', '^2', '*N*', '*n*']):
+                return "O(n²)"
+            elif any(var in expr_str for var in ['N', 'n', 'a', 'b', 'c']):
                 return "O(n)"
+            else:
+                return "O(1)"
 
     def evaluar(self, **kwargs):
         return self.expr.subs(kwargs)

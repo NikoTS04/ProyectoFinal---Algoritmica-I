@@ -1,0 +1,39 @@
+Funcion radix_sort(arr, N)
+    // Encontrar el máximo para conocer el número de dígitos
+    maximo <- arr[0]
+    Para i desde 1 hasta N - 1 hacer
+        Si arr[i] > maximo Entonces
+            maximo <- arr[i]
+        fSi
+    fPara
+    
+    // Hacer counting sort para cada dígito
+    exp <- 1
+    Mientras maximo / exp > 0 hacer
+        counting_sort_por_digito(arr, N, exp)
+        exp <- exp * 10
+    fMientras
+fFuncion
+
+Funcion counting_sort_por_digito(arr, N, exp)
+    Para i desde 0 hasta 9 hacer
+        count[i] <- 0
+    fPara
+    
+    Para i desde 0 hasta N - 1 hacer
+        count[(arr[i] / exp) mod 10] <- count[(arr[i] / exp) mod 10] + 1
+    fPara
+    
+    Para i desde 1 hasta 9 hacer
+        count[i] <- count[i] + count[i - 1]
+    fPara
+    
+    Para i desde N - 1 hasta 0 hacer
+        output[count[(arr[i] / exp) mod 10] - 1] <- arr[i]
+        count[(arr[i] / exp) mod 10] <- count[(arr[i] / exp) mod 10] - 1
+    fPara
+    
+    Para i desde 0 hasta N - 1 hacer
+        arr[i] <- output[i]
+    fPara
+fFuncion

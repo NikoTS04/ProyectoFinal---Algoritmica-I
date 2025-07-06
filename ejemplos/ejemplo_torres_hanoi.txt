@@ -1,0 +1,14 @@
+Funcion torres_hanoi(N, origen, destino, auxiliar)
+    Si N == 1 Entonces
+        mover_disco(origen, destino)
+    Sino
+        torres_hanoi(N - 1, origen, auxiliar, destino)
+        mover_disco(origen, destino)
+        torres_hanoi(N - 1, auxiliar, destino, origen)
+    fSi
+fFuncion
+
+Funcion mover_disco(desde, hacia)
+    // Operación básica O(1)
+    escribir("Mover disco de " + desde + " a " + hacia)
+fFuncion

@@ -21,19 +21,44 @@ class ResultadoAnalisis:
 class AnalizadorComplejidad:
     def __init__(self, arbol):
         self.arbol = arbol
-        self.funciones = self._mapear_funciones(arbol)
         self.cache_analisis = {}  # Cache para evitar re-análisis
+        self.variables_principales = {'N', 'n'}  # Variables que representan tamaño
+        self.parametros_funcion = {}  # Mapeo de función -> parámetros
+        self.funciones = self._mapear_funciones(arbol)  # Mover después de inicializar parametros_funcion
 
     def _mapear_funciones(self, nodo):
         funciones = {}
         if nodo.tipo == 'FUNCION':
             nombre = nodo.props.get('nombre')
+            args = nodo.props.get('args', [])
             if nombre:
                 funciones[nombre] = nodo
+                self.parametros_funcion[nombre] = args
+                # Si tiene parámetros, agregar el primero como variable principal
+                if args:
+                    self.variables_principales.add(args[0])
         for hijo in nodo.hijos:
             funciones.update(self._mapear_funciones(hijo))
         return funciones
     
+    def _obtener_variable_principal(self, nombre_funcion=None):
+        """Obtiene la variable principal para una función"""
+        if nombre_funcion and nombre_funcion in self.parametros_funcion:
+            params = self.parametros_funcion[nombre_funcion]
+            if params:
+                return params[0]  # Primer parámetro como variable principal
+        return 'N'  # Default
+    
+    def _es_variable_tamano(self, var_name):
+        """Determina si una variable representa el tamaño de entrada"""
+        return var_name in self.variables_principales or var_name.upper() in ['N', 'SIZE', 'LENGTH', 'LEN']
+    
+    def _normalizar_variable(self, var_name, nombre_funcion=None):
+        """Normaliza variables de tamaño a la variable principal"""
+        if self._es_variable_tamano(var_name):
+            return self._obtener_variable_principal(nombre_funcion)
+        return var_name
+
     def analizar(self, nombre_funcion=None):
         if nombre_funcion:
             if nombre_funcion not in self.funciones:
@@ -89,18 +114,24 @@ class AnalizadorComplejidad:
         elif tipo == 'PARA':
             desde = props.get('desde', '1')
             hasta = props.get('hasta', 'N')
+            
+            # Normalizar variables según los parámetros de la función actual
+            nombre_funcion_actual = self._obtener_funcion_actual(nodo)
+            hasta_normalizado = self._normalizar_expresion_bucle(hasta, nombre_funcion_actual)
+            desde_normalizado = self._normalizar_expresion_bucle(desde, nombre_funcion_actual)
+            
             try:
-                desde_val = int(desde)
+                desde_val = int(desde_normalizado)
             except Exception:
                 desde_val = None
                 
-            if desde_val is not None and hasta.isdigit():
-                iteraciones = int(hasta) - desde_val + 1
+            if desde_val is not None and hasta_normalizado.isdigit():
+                iteraciones = int(hasta_normalizado) - desde_val + 1
                 it_exp = ExpresionSimbolica.constante(iteraciones)
             else:
                 # Limpiar paréntesis innecesarios
-                hasta_limpio = hasta.replace('(', '').replace(')', '')
-                desde_limpio = desde.replace('(', '').replace(')', '')
+                hasta_limpio = hasta_normalizado.replace('(', '').replace(')', '')
+                desde_limpio = desde_normalizado.replace('(', '').replace(')', '')
                 
                 if hasta_limpio.isdigit() and desde_limpio.isdigit():
                     iteraciones = int(hasta_limpio) - int(desde_limpio) + 1
@@ -296,10 +327,32 @@ class AnalizadorComplejidad:
         # === SI ===
         if tipo == 'SI':
             cond_tokens = props.get('cond', [])
-            costo_cond = ExpresionSimbolica.desde_tokens(cond_tokens)
-            ramas = [self._analizar_nodo(hijo, funciones_llamadas) for hijo in nodo.hijos]
+            try:
+                costo_cond = ExpresionSimbolica.desde_tokens(cond_tokens)
+            except:
+                # Si hay problemas con la condición, asumir costo constante
+                costo_cond = ExpresionSimbolica.constante(1)
+            
+            ramas = []
+            for hijo in nodo.hijos:
+                try:
+                    rama_costo = self._analizar_nodo(hijo, funciones_llamadas)
+                    ramas.append(rama_costo)
+                except:
+                    # Si hay problemas analizando una rama, asumir costo constante
+                    ramas.append(ExpresionSimbolica.constante(1))
+            
             if ramas:
-                return costo_cond + max(ramas, key = lambda r: r.expr)
+                # Tomar el máximo de las ramas como caso peor
+                try:
+                    max_rama = max(ramas, key=lambda r: self._obtener_valor_numerico(r))
+                    return costo_cond + max_rama
+                except:
+                    # Si hay problemas comparando, sumar todas las ramas
+                    total_ramas = ExpresionSimbolica.constante(0)
+                    for rama in ramas:
+                        total_ramas += rama
+                    return costo_cond + total_ramas
             return costo_cond
         
         # === LLAMADA A FUNCION ===
@@ -724,3 +777,61 @@ class AnalizadorComplejidad:
         tiene_decremento = any(p['patron']['tipo'] == 'decremental' for p in patrones_ramas)
         
         return tiene_division and tiene_decremento
+
+    def _obtener_funcion_actual(self, nodo):
+        """Obtiene el nombre de la función que contiene este nodo"""
+        # Recorrer hacia arriba en el árbol para encontrar la función padre
+        # Esta es una implementación simplificada
+        for nombre, nodo_func in self.funciones.items():
+            if self._nodo_esta_en_funcion(nodo, nodo_func):
+                return nombre
+        return None
+    
+    def _nodo_esta_en_funcion(self, nodo_buscado, nodo_funcion):
+        """Verifica si un nodo está dentro de una función específica"""
+        if nodo_funcion == nodo_buscado:
+            return True
+        for hijo in nodo_funcion.hijos:
+            if self._nodo_esta_en_funcion(nodo_buscado, hijo):
+                return True
+        return False
+    
+    def _normalizar_expresion_bucle(self, expresion, nombre_funcion=None):
+        """Normaliza una expresión de bucle considerando los parámetros de la función"""
+        if not expresion or expresion.isdigit():
+            return expresion
+        
+        # Si es una variable simple, intentar normalizarla
+        expr_limpia = expresion.strip().replace('(', '').replace(')', '')
+        
+        # Si la función tiene parámetros, mapear variables conocidas
+        if nombre_funcion and nombre_funcion in self.parametros_funcion:
+            params = self.parametros_funcion[nombre_funcion]
+            # Si la expresión coincide con algún parámetro, usar el primer parámetro como principal
+            if expr_limpia in params:
+                return params[0] if params else 'N'
+        
+        # Manejar expresiones como "N+1", "N-1", etc.
+        if '+' in expr_limpia or '-' in expr_limpia or '*' in expr_limpia or '/' in expr_limpia:
+            # Para expresiones complejas, buscar variables de tamaño conocidas
+            for var in self.variables_principales:
+                if var in expr_limpia:
+                    return expr_limpia.replace(var, self._obtener_variable_principal(nombre_funcion))
+        
+        return expresion
+    
+    def _obtener_valor_numerico(self, expresion):
+        """Obtiene un valor numérico aproximado para comparar expresiones"""
+        try:
+            import sympy
+            expr = expresion.expr
+            # Sustituir N por un valor de prueba para comparar
+            N = sympy.Symbol('N')
+            valor_prueba = expr.subs(N, 100)
+            if valor_prueba.is_number:
+                return float(valor_prueba)
+            else:
+                # Si no se puede evaluar, usar la complejidad del string
+                return len(str(expr))
+        except:
+            return 1

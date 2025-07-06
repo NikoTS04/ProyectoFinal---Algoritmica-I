@@ -1,0 +1,31 @@
+Funcion heapsort(arr, N)
+    // Construir heap
+    Para i desde N/2 - 1 hasta 0 hacer
+        heapify(arr, N, i)
+    fPara
+    
+    // Extraer elementos del heap
+    Para i desde N - 1 hasta 0 hacer
+        intercambiar(arr[0], arr[i])
+        heapify(arr, i, 0)
+    fPara
+fFuncion
+
+Funcion heapify(arr, N, i)
+    mayor <- i
+    izq <- 2 * i + 1
+    der <- 2 * i + 2
+    
+    Si izq < N Y arr[izq] > arr[mayor] Entonces
+        mayor <- izq
+    fSi
+    
+    Si der < N Y arr[der] > arr[mayor] Entonces
+        mayor <- der
+    fSi
+    
+    Si mayor != i Entonces
+        intercambiar(arr[i], arr[mayor])
+        heapify(arr, N, mayor)
+    fSi
+fFuncion

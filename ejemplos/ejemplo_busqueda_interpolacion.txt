@@ -1,0 +1,26 @@
+Funcion busqueda_interpolacion(arr, N, x)
+    inicio <- 0
+    fin <- N - 1
+    
+    Mientras inicio <= fin Y x >= arr[inicio] Y x <= arr[fin] hacer
+        Si inicio == fin Entonces
+            Si arr[inicio] == x Entonces
+                retornar inicio
+            fSi
+            retornar -1
+        fSi
+        
+        // Estimación por interpolación
+        pos <- inicio + ((x - arr[inicio]) * (fin - inicio)) / (arr[fin] - arr[inicio])
+        
+        Si arr[pos] == x Entonces
+            retornar pos
+        Sino Si arr[pos] < x Entonces
+            inicio <- pos + 1
+        Sino
+            fin <- pos - 1
+        fSi
+    fMientras
+    
+    retornar -1
+fFuncion

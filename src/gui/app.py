@@ -34,8 +34,15 @@ class AnalizadorApp:
         # Crear ventana principal
         self.ventana = tb.Window(themename="flatly")
         self.ventana.title("🎯 Analizador de Complejidad Temporal - v2.0")
-        self.ventana.geometry("950x750")
-        self.ventana.minsize(850, 650)
+        self.ventana.geometry("1000x800")
+        self.ventana.minsize(900, 700)
+        
+        # Maximizar ventana si es Windows
+        try:
+            self.ventana.state('zoomed')
+        except:
+            # Si no es Windows, usar normal
+            pass
         
         # Configurar ícono personalizado
         self._configurar_icono()

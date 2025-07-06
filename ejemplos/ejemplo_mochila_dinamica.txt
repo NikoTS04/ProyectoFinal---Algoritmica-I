@@ -1,0 +1,16 @@
+Funcion problema_mochila(W, pesos, valores, N)
+    // Crear tabla dp[N+1][W+1]
+    Para i desde 0 hasta N hacer
+        Para w desde 0 hasta W hacer
+            Si i == 0 O w == 0 Entonces
+                dp[i][w] <- 0
+            Sino Si pesos[i-1] <= w Entonces
+                dp[i][w] <- max(valores[i-1] + dp[i-1][w-pesos[i-1]], dp[i-1][w])
+            Sino
+                dp[i][w] <- dp[i-1][w]
+            fSi
+        fPara
+    fPara
+    
+    retornar dp[N][W]
+fFuncion

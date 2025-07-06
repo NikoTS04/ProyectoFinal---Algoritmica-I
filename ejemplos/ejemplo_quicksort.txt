@@ -1,0 +1,22 @@
+Funcion quicksort(arr, inicio, fin)
+    Si inicio < fin Entonces
+        pivote <- particion(arr, inicio, fin)
+        quicksort(arr, inicio, pivote - 1)
+        quicksort(arr, pivote + 1, fin)
+    fSi
+fFuncion
+
+Funcion particion(arr, inicio, fin)
+    pivote <- arr[fin]
+    i <- inicio - 1
+    
+    Para j desde inicio hasta fin - 1 hacer
+        Si arr[j] <= pivote Entonces
+            i <- i + 1
+            intercambiar(arr[i], arr[j])
+        fSi
+    fPara
+    
+    intercambiar(arr[i + 1], arr[fin])
+    retornar i + 1
+fFuncion

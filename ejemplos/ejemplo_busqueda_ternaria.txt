@@ -1,0 +1,33 @@
+Funcion busqueda_ternaria(N)
+    inicio <- 1
+    fin <- N
+    x <- valor_buscado
+    
+    Si fin >= inicio Entonces
+        med1 <- inicio + (fin - inicio) / 3
+        med2 <- fin - (fin - inicio) / 3
+        
+        Si arr[med1] = x Entonces
+            retornar med1
+        fSi
+        
+        Si arr[med2] = x Entonces
+            retornar med2
+        fSi
+        
+        Si x < arr[med1] Entonces
+            resultado <- busqueda_ternaria_recursiva(inicio, med1 - 1)
+            retornar resultado
+        Sino
+            Si x > arr[med2] Entonces
+                resultado <- busqueda_ternaria_recursiva(med2 + 1, fin)
+                retornar resultado
+            Sino
+                resultado <- busqueda_ternaria_recursiva(med1 + 1, med2 - 1)
+                retornar resultado
+            fSi
+        fSi
+    fSi
+    
+    retornar -1
+fFuncion

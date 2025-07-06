@@ -1,0 +1,13 @@
+Funcion insertion_sort(arr, N)
+    Para i desde 1 hasta N - 1 hacer
+        clave <- arr[i]
+        j <- i - 1
+        
+        Mientras j >= 0 Y arr[j] > clave hacer
+            arr[j + 1] <- arr[j]
+            j <- j - 1
+        fMientras
+        
+        arr[j + 1] <- clave
+    fPara
+fFuncion

@@ -1,0 +1,50 @@
+Funcion mergesort(arr, inicio, fin)
+    Si inicio < fin Entonces
+        medio <- (inicio + fin) / 2
+        mergesort(arr, inicio, medio)
+        mergesort(arr, medio + 1, fin)
+        merge(arr, inicio, medio, fin)
+    fSi
+fFuncion
+
+Funcion merge(arr, inicio, medio, fin)
+    n1 <- medio - inicio + 1
+    n2 <- fin - medio
+    
+    // Crear arrays temporales
+    Para i desde 0 hasta n1 - 1 hacer
+        izq[i] <- arr[inicio + i]
+    fPara
+    
+    Para j desde 0 hasta n2 - 1 hacer
+        der[j] <- arr[medio + 1 + j]
+    fPara
+    
+    i <- 0
+    j <- 0
+    k <- inicio
+    
+    Mientras i < n1 Y j < n2 hacer
+        Si izq[i] <= der[j] Entonces
+            arr[k] <- izq[i]
+            i <- i + 1
+        Sino
+            arr[k] <- der[j]
+            j <- j + 1
+        fSi
+        k <- k + 1
+    fMientras
+    
+    // Copiar elementos restantes
+    Mientras i < n1 hacer
+        arr[k] <- izq[i]
+        i <- i + 1
+        k <- k + 1
+    fMientras
+    
+    Mientras j < n2 hacer
+        arr[k] <- der[j]
+        j <- j + 1
+        k <- k + 1
+    fMientras
+fFuncion

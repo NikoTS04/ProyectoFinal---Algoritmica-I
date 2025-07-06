@@ -82,6 +82,45 @@ def crear_pestana_comparacion(frame):
         boton_cancelar = tb.Button(frame_botones, text="Cancelar", command=cancelar, bootstyle="secondary")
         boton_cancelar.pack(side="left", padx=5)
     
+    def cargar_desde_archivo_txt():
+        """Carga un algoritmo desde un archivo .txt"""
+        archivo = tkinter.filedialog.askopenfilename(
+            title="Seleccionar archivo de pseudocódigo",
+            filetypes=[("Archivos de texto", "*.txt"), ("Todos los archivos", "*.*")]
+        )
+        
+        if not archivo:
+            return
+        
+        try:
+            with open(archivo, 'r', encoding='utf-8') as f:
+                codigo = f.read()
+            
+            # Analizar el código
+            tokens = tokenizar(codigo)
+            arbol = parsear(tokens)
+            analizador = AnalizadorComplejidad(arbol)
+            
+            # Buscar funciones
+            funciones = encontrar_funciones(arbol)
+            if funciones:
+                resultado = analizador.analizar(funciones[0])
+            else:
+                resultado = analizador.analizar()
+            
+            nonlocal algoritmo2
+            algoritmo2 = {
+                "codigo": codigo,
+                "resultado": resultado,
+                "nombre": resultado.nombre_funcion or os.path.basename(archivo).replace('.txt', '')
+            }
+            
+            actualizar_interfaz()
+            tkinter.messagebox.showinfo("Éxito", f"Algoritmo cargado desde {os.path.basename(archivo)}")
+            
+        except Exception as e:
+            tkinter.messagebox.showerror("Error", f"Error al cargar el archivo:\n{str(e)}")
+
     def cargar_desde_archivo():
         """Carga un algoritmo desde un archivo guardado"""
         archivos = serializador.listar_analisis_guardados()
@@ -383,13 +422,16 @@ def crear_pestana_comparacion(frame):
     frame_botones = tb.Frame(frame)
     frame_botones.pack(pady=10)
     
-    boton_nuevo = tb.Button(frame_botones, text="Cargar código nuevo", command=cargar_codigo_nuevo, bootstyle="info")
+    boton_nuevo = tb.Button(frame_botones, text="📝 Cargar código nuevo", command=cargar_codigo_nuevo, bootstyle="info")
     boton_nuevo.pack(side="left", padx=5)
     
-    boton_archivo = tb.Button(frame_botones, text="Cargar desde archivo", command=cargar_desde_archivo, bootstyle="success")
+    boton_archivo_txt = tb.Button(frame_botones, text="📁 Cargar desde archivo .txt", command=cargar_desde_archivo_txt, bootstyle="warning")
+    boton_archivo_txt.pack(side="left", padx=5)
+    
+    boton_archivo = tb.Button(frame_botones, text="💾 Cargar desde archivo guardado", command=cargar_desde_archivo, bootstyle="success")
     boton_archivo.pack(side="left", padx=5)
     
-    boton_comparar = tb.Button(frame_botones, text="Comparar", command=comparar_algoritmos, bootstyle="primary", state="disabled")
+    boton_comparar = tb.Button(frame_botones, text="🔍 Comparar", command=comparar_algoritmos, bootstyle="primary", state="disabled")
     boton_comparar.pack(side="left", padx=5)
     
     # Frame para gráfica

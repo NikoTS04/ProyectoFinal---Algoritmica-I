@@ -1,0 +1,27 @@
+Funcion counting_sort(arr, N, k)
+    // Crear array de conteo
+    Para i desde 0 hasta k hacer
+        count[i] <- 0
+    fPara
+    
+    // Contar ocurrencias
+    Para i desde 0 hasta N - 1 hacer
+        count[arr[i]] <- count[arr[i]] + 1
+    fPara
+    
+    // Modificar count[i] para que contenga posiciones reales
+    Para i desde 1 hasta k hacer
+        count[i] <- count[i] + count[i-1]
+    fPara
+    
+    // Construir array resultado
+    Para i desde N - 1 hasta 0 hacer
+        output[count[arr[i]] - 1] <- arr[i]
+        count[arr[i]] <- count[arr[i]] - 1
+    fPara
+    
+    // Copiar resultado de vuelta
+    Para i desde 0 hasta N - 1 hacer
+        arr[i] <- output[i]
+    fPara
+fFuncion
