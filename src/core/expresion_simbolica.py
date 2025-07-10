@@ -89,7 +89,13 @@ class ExpresionSimbolica:
                 if (expr_simplificada.has(sympy.log(v)) or 
                     f'log({v_str})' in expr_str or
                     '/log(' in expr_str):
-                    return f"O(log(n))"
+                    # Verificar si es N*log(N)
+                    if (expr_simplificada.has(v * sympy.log(v)) or
+                        f'{v_str}*log({v_str})' in expr_str or
+                        f'log({v_str})*{v_str}' in expr_str):
+                        return f"O(n log(n))"
+                    else:
+                        return f"O(log(n))"
             
             # Expandir para obtener términos individuales
             expr_expanded = sympy.expand(expr_simplificada)
@@ -221,3 +227,23 @@ class ExpresionSimbolica:
         plt.title('Complejidad temporal')
         plt.grid(True)
         plt.show()
+
+    def es_lineal(self):
+        """Verifica si la expresión es de complejidad lineal O(n)"""
+        try:
+            # Expandir la expresión para análisis
+            expr_expandida = sympy.expand(self.expr)
+            
+            # Buscar el término de mayor grado
+            variables = list(expr_expandida.free_symbols)
+            if not variables:
+                return False  # Constante
+            
+            # Calcular el grado total de la expresión
+            grado = sympy.degree(expr_expandida)
+            
+            # Es lineal si el grado es 1
+            return grado == 1
+        except:
+            # Si hay problemas de análisis, asumir que no es lineal
+            return False

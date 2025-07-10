@@ -23,8 +23,8 @@ sys.path.insert(0, str(SRC_DIR))
 def main():
     """Función principal del programa"""
     print("═" * 65)
-    print("    🎯 ANALIZADOR DE COMPLEJIDAD TEMPORAL")
-    print("    📊 Análisis de Pseudocódigo con Visualización")
+    print("     ANALIZADOR DE COMPLEJIDAD TEMPORAL")
+    print("     Análisis de Pseudocódigo con Visualización")
     print("═" * 65)
     print()
     
@@ -32,24 +32,24 @@ def main():
         # Importar y ejecutar la interfaz gráfica
         from gui.app import AnalizadorApp
         
-        print("🚀 Iniciando interfaz gráfica...")
-        print("💡 Tip: Usa 'python main.py --help' para ver opciones de CLI")
+        print(" Iniciando interfaz gráfica...")
+        print(" Tip: Usa 'python main.py --help' para ver opciones de CLI")
         print()
         
         app = AnalizadorApp()
         app.ejecutar()
         
     except ImportError as e:
-        print(f"❌ Error al importar módulos: {e}")
-        print("\n🔧 Solución:")
+        print(f" Error al importar módulos: {e}")
+        print("\n Solución:")
         print("   pip install -r requirements.txt")
-        print("\n🔍 También puedes ejecutar:")
+        print("\n También puedes ejecutar:")
         print("   python validar_sistema.py")
         sys.exit(1)
         
     except Exception as e:
-        print(f"❌ Error inesperado: {e}")
-        print("\n🔍 Para más información, ejecuta:")
+        print(f" Error inesperado: {e}")
+        print("\n Para más información, ejecuta:")
         print("   python validar_sistema.py")
         sys.exit(1)
 
@@ -82,14 +82,14 @@ def main_cli():
             codigo = f.read()
         
         if verbose:
-            print("\n📄 Código:")
+            print("\n Código:")
             print("─" * 50)
             print(codigo)
             print("─" * 50)
         
         # Análisis
         if verbose:
-            print("\n⚙️  Procesando...")
+            print("\n  Procesando...")
             print("  • Tokenizando código...")
         
         tokens = tokenizar(codigo)
@@ -122,13 +122,13 @@ def main_cli():
         
         print("\n📊 Resultado del análisis:")
         print("═" * 50)
-        print(f"🔧 Función: {resultado.nombre_funcion or 'Código principal'}")
-        print(f"⏱️  T(n) = {resultado.funcion_tiempo.como_str()}")
-        print(f"📈 Big O: {resultado.big_o}")
-        print(f"🔄 Recursivo: {'Sí' if resultado.recursivo else 'No'}")
+        print(f" Función: {resultado.nombre_funcion or 'Código principal'}")
+        print(f"  T(n) = {resultado.funcion_tiempo.como_str()}")
+        print(f" Big O: {resultado.big_o}")
+        print(f" Recursivo: {'Sí' if resultado.recursivo else 'No'}")
         
         if verbose:
-            print(f"\n📋 Detalles adicionales:")
+            print(f"\n Detalles adicionales:")
             print(f"  • Tokens encontrados: {len(tokens)}")
             print(f"  • Funciones detectadas: {len(funciones)}")
             if funciones:
@@ -139,17 +139,17 @@ def main_cli():
             try:
                 serializador = SerializadorAnalisis()
                 archivo_guardado = serializador.guardar_analisis(codigo, resultado)
-                print(f"\n💾 Análisis guardado en: {archivo_guardado}")
+                print(f"\n Análisis guardado en: {archivo_guardado}")
             except Exception as e:
-                print(f"\n⚠️  Error al guardar: {e}")
+                print(f"\n  Error al guardar: {e}")
         
         print("\n✅ Análisis completado exitosamente")
         
     except FileNotFoundError:
-        print(f"❌ Error: No se encontró el archivo '{archivo}'")
+        print(f" Error: No se encontró el archivo '{archivo}'")
         print("💡 Verifica que la ruta sea correcta y el archivo exista")
     except Exception as e:
-        print(f"❌ Error durante el análisis: {e}")
+        print(f" Error durante el análisis: {e}")
         if verbose:
             import traceback
             print("\n🔍 Detalles del error:")
@@ -161,7 +161,7 @@ if __name__ == "__main__":
         if sys.argv[1] == "--cli":
             main_cli()
         elif sys.argv[1] == "--help" or sys.argv[1] == "-h":
-            print("🎯 ANALIZADOR DE COMPLEJIDAD TEMPORAL")
+            print(" ANALIZADOR DE COMPLEJIDAD TEMPORAL")
             print("═" * 50)
             print("\nUso:")
             print("  python main.py                    # Interfaz gráfica")
@@ -178,7 +178,7 @@ if __name__ == "__main__":
             print("  python probar_ejemplos.py         # Probar todos los ejemplos")
             print("  python validar_sistema.py         # Validar instalación")
         elif sys.argv[1] == "--ejemplos":
-            print("📚 EJEMPLOS DISPONIBLES")
+            print(" EJEMPLOS DISPONIBLES")
             print("═" * 50)
             ejemplos_dir = PROJECT_ROOT / "ejemplos"
             if ejemplos_dir.exists():

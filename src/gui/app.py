@@ -127,12 +127,12 @@ class AnalizadorApp:
                 except Exception as e:
                     print(f"⚠️ Error con iconphoto: {e}")
                 
-                print(f"✅ Icono personalizado cargado: {icon_path.name}")
-                print("🖼️ Icono aplicado a ventana y barra de tareas")
+                print(f" Icono personalizado cargado: {icon_path.name}")
+                print(" Icono aplicado a ventana y barra de tareas")
                 
             else:
-                print(f"⚠️ Archivo de icono no encontrado: {icon_path}")
-                print(f"📁 Buscado en: {icon_path}")
+                print(f" Archivo de icono no encontrado: {icon_path}")
+                print(f" Buscado en: {icon_path}")
                 
                 # Buscar en ubicaciones alternativas
                 alt_paths = [
@@ -144,12 +144,12 @@ class AnalizadorApp:
                 
                 for alt_path in alt_paths:
                     if alt_path.exists():
-                        print(f"✅ Icono encontrado en ubicación alternativa: {alt_path}")
+                        print(f" Icono encontrado en ubicación alternativa: {alt_path}")
                         self.ventana.iconbitmap(str(alt_path))
                         self.ventana.wm_iconbitmap(str(alt_path))
                         break
                 else:
-                    print("❌ No se encontró el icono en ninguna ubicación")
+                    print(" No se encontró el icono en ninguna ubicación")
                     
         except Exception as e:
             print(f"⚠️ No se pudo cargar el icono personalizado: {e}")
@@ -169,10 +169,10 @@ class AnalizadorApp:
             # Forzar que la ventana sea reconocida como aplicación independiente
             self.ventana.wm_attributes('-topmost', False)
             
-            print("✅ Configuraciones de Windows aplicadas (barra de tareas)")
+            print(" Configuraciones de Windows aplicadas (barra de tareas)")
             
         except Exception as e:
-            print(f"⚠️ No se pudieron aplicar configuraciones de Windows: {e}")
+            print(f" No se pudieron aplicar configuraciones de Windows: {e}")
             # No es crítico, continuar sin estas optimizaciones
             pass
     
@@ -219,15 +219,15 @@ class AnalizadorApp:
     
     def ejecutar(self):
         """Ejecuta la aplicación"""
-        print("✅ Interfaz gráfica iniciada correctamente")
-        print("💡 Tip: Comienza cargando un ejemplo desde la pestaña 'Entrada'")
-        print("📁 Ejemplos disponibles en la carpeta 'ejemplos/'")
+        print(" Interfaz gráfica iniciada correctamente")
+        print(" Tip: Comienza cargando un ejemplo desde la pestaña 'Entrada'")
+        print(" Ejemplos disponibles en la carpeta 'ejemplos/'")
         print()
         
         # Ejecutar el loop principal
         self.ventana.mainloop()
         
-        print("👋 Aplicación cerrada. ¡Gracias por usar el analizador!")
+        print(" Aplicación cerrada.")
 
 def main():
     """Función principal para ejecutar la aplicación"""

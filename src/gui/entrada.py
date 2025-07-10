@@ -119,7 +119,7 @@ def crear_pestana_entrada_mejorada(frame, cambiar_a_grafica_callback=None, cambi
             # Mostrar mensaje de procesamiento
             texto_resultado.config(state="normal")
             texto_resultado.delete(1.0, "end")
-            texto_resultado.insert("end", "🔄 Procesando análisis...\n")
+            texto_resultado.insert("end", " Procesando análisis...\n")
             texto_resultado.config(state="disabled")
             container.update()
             
@@ -151,35 +151,35 @@ def crear_pestana_entrada_mejorada(frame, cambiar_a_grafica_callback=None, cambi
             texto_resultado.delete(1.0, "end")
             
             # Resultado exitoso
-            texto_resultado.insert("end", "✅ ANÁLISIS COMPLETADO EXITOSAMENTE\n\n")
-            texto_resultado.insert("end", f"🔧 Función: {resultado.nombre_funcion or 'Código principal'}\n")
-            texto_resultado.insert("end", f"📊 Tipo: {'Función recursiva' if resultado.recursivo else 'Función iterativa'}\n")
-            texto_resultado.insert("end", f"⏱️  T(n) = {resultado.funcion_tiempo.como_str()}\n")
-            texto_resultado.insert("end", f"📈 Big O: {resultado.big_o}\n")
-            texto_resultado.insert("end", f"🔄 Recursivo: {'Sí' if resultado.recursivo else 'No'}\n\n")
+            texto_resultado.insert("end", " ANÁLISIS COMPLETADO EXITOSAMENTE\n\n")
+            texto_resultado.insert("end", f" Función: {resultado.nombre_funcion or 'Código principal'}\n")
+            texto_resultado.insert("end", f" Tipo: {'Función recursiva' if resultado.recursivo else 'Función iterativa'}\n")
+            texto_resultado.insert("end", f"  T(n) = {resultado.funcion_tiempo.como_str()}\n")
+            texto_resultado.insert("end", f" Big O: {resultado.big_o}\n")
+            texto_resultado.insert("end", f" Recursivo: {'Sí' if resultado.recursivo else 'No'}\n\n")
             
             # Información adicional
-            texto_resultado.insert("end", "📋 Detalles adicionales:\n")
+            texto_resultado.insert("end", " Detalles adicionales:\n")
             texto_resultado.insert("end", f"  • Tokens procesados: {len(tokens)}\n")
             texto_resultado.insert("end", f"  • Funciones detectadas: {len(funciones)}\n")
             if funciones:
                 texto_resultado.insert("end", f"  • Nombres de funciones: {', '.join(funciones)}\n")
             
             # Interpretación del resultado
-            texto_resultado.insert("end", "\n📊 INTERPRETACIÓN:\n")
+            texto_resultado.insert("end", "\n INTERPRETACIÓN:\n")
             big_o = resultado.big_o
             if "O(1)" in big_o:
-                texto_resultado.insert("end", "🟢 Complejidad constante - Muy eficiente\n")
+                texto_resultado.insert("end", " Complejidad constante - Muy eficiente\n")
             elif "log" in big_o.lower():
-                texto_resultado.insert("end", "� Complejidad logarítmica - Muy eficiente\n")
+                texto_resultado.insert("end", " Complejidad logarítmica - Muy eficiente\n")
             elif "O(n)" == big_o:
-                texto_resultado.insert("end", "🟡 Complejidad lineal - Eficiencia buena\n")
+                texto_resultado.insert("end", " Complejidad lineal - Eficiencia buena\n")
             elif "n**2" in big_o or "n^2" in big_o:
-                texto_resultado.insert("end", "🟠 Complejidad cuadrática - Cuidado con datos grandes\n")
+                texto_resultado.insert("end", " Complejidad cuadrática - Cuidado con datos grandes\n")
             elif "2**n" in big_o or "2^n" in big_o:
-                texto_resultado.insert("end", "🔴 Complejidad exponencial - Solo para datos pequeños\n")
+                texto_resultado.insert("end", " Complejidad exponencial - Solo para datos pequeños\n")
             else:
-                texto_resultado.insert("end", "⚪ Complejidad personalizada - Analiza caso por caso\n")
+                texto_resultado.insert("end", " Complejidad personalizada - Analiza caso por caso\n")
             
             texto_resultado.insert("end", "\n💡 Usa las pestañas 'Gráfica' y 'Comparación' para más detalles\n")
             
@@ -198,9 +198,9 @@ def crear_pestana_entrada_mejorada(frame, cambiar_a_grafica_callback=None, cambi
             # Mostrar error
             texto_resultado.config(state="normal")
             texto_resultado.delete(1.0, "end")
-            texto_resultado.insert("end", "❌ Error en el análisis:\n\n")
-            texto_resultado.insert("end", f"📋 Detalles: {str(e)}\n\n")
-            texto_resultado.insert("end", "🔍 Posibles soluciones:\n")
+            texto_resultado.insert("end", " Error en el análisis:\n\n")
+            texto_resultado.insert("end", f" Detalles: {str(e)}\n\n")
+            texto_resultado.insert("end", " Posibles soluciones:\n")
             texto_resultado.insert("end", "• Verifica que el código siga la sintaxis correcta\n")
             texto_resultado.insert("end", "• Asegúrate de que las funciones estén bien definidas\n")
             texto_resultado.insert("end", "• Revisa que los bucles tengan condiciones de parada\n")
@@ -293,10 +293,10 @@ def crear_pestana_entrada_mejorada(frame, cambiar_a_grafica_callback=None, cambi
 
     # --- MENSAJE INICIAL ---
     texto_resultado.config(state="normal")
-    texto_resultado.insert("end", "🚀 Listo para analizar | 💡 Tip: Carga un ejemplo desde 'Cargar ejemplo'\n\n")
-    texto_resultado.insert("end", "📁 Ejemplos disponibles en la carpeta 'ejemplos/'\n")
-    texto_resultado.insert("end", "💻 O escribe tu propio pseudocódigo siguiendo la sintaxis del proyecto\n\n")
-    texto_resultado.insert("end", "🎯 Funcionalidades disponibles:\n")
+    texto_resultado.insert("end", " Listo para analizar |  Tip: Carga un ejemplo desde 'Cargar ejemplo'\n\n")
+    texto_resultado.insert("end", " Ejemplos disponibles en la carpeta 'ejemplos/'\n")
+    texto_resultado.insert("end", " O escribe tu propio pseudocódigo siguiendo la sintaxis del proyecto\n\n")
+    texto_resultado.insert("end", " Funcionalidades disponibles:\n")
     texto_resultado.insert("end", "  • Análisis automático de complejidad temporal\n")
     texto_resultado.insert("end", "  • Detección de funciones recursivas\n")
     texto_resultado.insert("end", "  • Visualización gráfica de T(n) vs Big O\n")
